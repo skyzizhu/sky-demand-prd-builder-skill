@@ -609,4 +609,4 @@ image_url: https://example.com/path/to/illustration.png
    - 验收标准与用例；  
    - 风险、依赖与 TODO 汇总；  
    的 PRD 文本草稿。  
-5. 如有需要，再将该 PRD 文本交由 `pdf` skill 或其他工具生成最终 PDF 文档。
+5. 如有需要，再将该 PRD 文本交由 `pdf` skill 或其他工具生成最终 PDF 文档；如需原型图、效果图或界面草图，可在此基础上交由其他设计/原型类工具或技能继续处理。
