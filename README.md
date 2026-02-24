@@ -1,29 +1,73 @@
 # sky-demand-prd-builder-skill
 
-A Codex skill for turning validated "true" product demands into structured PRD drafts (with data/metrics, events, and TODOs), based on outputs from `sky-demand-evaluator`.
+A Codex skill for turning product demands into structured PRD drafts (with data/metrics, events, wireframes, and TODOs).
 
 ## What this skill does
 
-- Input：接收 `sky-demand-evaluator` 已判定为「真需求 + 推荐实施」的结构化结果。
-- Output：生成结构化的 PRD 草稿，包括：
+- **Input**  
+  - 直接接收一段产品需求/场景描述；或  
+  - 接收 `sky-demand-evaluator` 已判定为「真需求 + 推荐实施」的结构化结果。
+
+- **Output：生成结构化的 PRD 草稿，包括**：
   - PRD 元信息（需求名、Owner、版本、TODO 等）；
-  - 背景与目标（含可度量目标的 TODO 占位）；
+  - 背景、问题陈述与关键假设（假设明确可验证/证伪）；
   - 用户与使用场景（用户角色、Job story、关键用户路径）；
   - 需求范围与分层（Must/Should/Could + MVP 建议）；
-  - 方案设计概要（流程、页面/模块、文案 TODO）；
-  - 数据 / 埋点 / 监控设计（指标、事件、报表与监控建议）；
+  - 方案设计概要（功能架构、流程、页面/模块）；
+  - 数据 / 埋点 / 报表 / 监控设计；
+  - 灰度发布 / 实验设计与上线后复盘计划；
   - 验收标准与用例示例；
   - 风险、依赖与 TODO 汇总（按角色+优先级）。
 
-该 skill 还有一个自检模式：当输入是一份已有 PRD 文档时，它不重写 PRD，而是按自身结构输出一份「自检报告」，指出缺失或薄弱的部分并给出补充建议。
+- **HTML 线框（wireframes）**  
+  - 在 PRD 的基础上，可为每个涉及的页面（列表、详情等）生成对应的 HTML 线框页面，用于评审和沟通。  
+  - 支持根据 PRD 内容输出多张草图，而不是单一页面。
+
+- **自检模式**  
+  - 当输入是一份已有 PRD 文档时，不重写 PRD，而是按自身结构输出一份「自检报告」，指出缺失或薄弱的部分并给出补充建议。
 
 ## Layout
 
-- `skills/sky-demand-prd-builder-skill/SKILL.md`  — 核心 skill 定义与使用说明。
+- `skills/sky-demand-prd-builder-skill/SKILL.md`  
+  核心 skill 定义与使用说明（PRD 结构、数据设计、wireframe 约定等）。
+- `skills/sky-demand-prd-builder-skill/scripts/generate_ai_wireframes.py`  
+  扫描 PRD Markdown 中的 `ai-wireframe` 区块，生成对应的 HTML 线框页面。
+- `skills/sky-demand-prd-builder-skill/assets/`  
+  本地占位图资源（纵向、横向、列表缩略图占位图），用于 HTML 草图中的图片位。
 
 ## Typical workflow
 
-1. 使用 `sky-demand-evaluator` 判断某条用户/业务需求是否属于真需求，并给出实施推荐度评分。
-2. 对于「真需求 + 推荐度 > 50%」的条目，将其结构化输出输入给 `sky-demand-prd-builder-skill`。
-3. 本 skill 生成 PRD 草稿（通常会另存为一个 `.md` 文件），你在此基础上补完 TODO、对齐团队口径即可用于评审/跟进。
-4. 如已有人手工写好 PRD，也可以让本 skill 以自检模式对该 PRD 做结构化检查，给出需要补充的模块与 TODO 清单。
+1. **需求判断（可选）**  
+   - 使用 `sky-demand-evaluator` 判断某条用户/业务需求是否属于真需求，并给出实施推荐度评分。  
+   - 对于「真需求 + 推荐度 > 50%」的条目，可直接作为本 skill 的输入。
+
+2. **生成 PRD 草稿**  
+   - 将需求描述或 `sky-demand-evaluator` 的结构化输出输入给 `sky-demand-prd-builder-skill`。  
+   - 本 skill 生成结构化 PRD 文本（通常会另存为一个 `.md` 文件，默认目录如 `output/prd/xxx-prd.md`），你在此基础上补完 TODO、对齐团队口径即可用于评审/跟进。
+
+3. **为相关页面生成 HTML 线框**  
+   - 在 PRD 末尾为每个关键页面追加一个 `ai-wireframe` 区块，例如：
+
+     ```markdown
+     ```ai-wireframe
+     type: list_page
+     name: message_list_read_status
+     title: 信息列表已读/未读状态线框
+     output_path: wireframes/message-list-read-status.html
+     variant: mobile
+     notes: 用于展示未读亮色、已读浅灰的对比
+     image_url: https://dummyimage.com/800x320/e0e0e0/aaaaaa&text=Message+List+Wireframe
+     ```
+     ```
+
+   - 然后在本地执行：
+
+     ```bash
+     cd skills/sky-demand-prd-builder-skill
+     python scripts/generate_ai_wireframes.py /path/to/your_prd.md
+     ```
+
+   - 脚本会为每个 `ai-wireframe` 区块生成一张 HTML 线框页面（例如 `wireframes/message-list-read-status.html`、`wireframes/message-detail-read-status.html`），页面中包含占位图和示例文字。
+
+4. **PRD 自检（可选）**  
+   - 如已有人手工写好 PRD，也可以让本 skill 以自检模式对该 PRD 做结构化检查，给出需要补充的模块、风险与 TODO 清单。
