@@ -489,9 +489,7 @@ description: 生成标准化的 PRD 草稿与数据/埋点方案草稿，并标�
 - 在方案部分按端拆分小节（例如「4.4.1 iOS」「4.4.2 Android」），避免不同端的差异混杂在同一段落；  
 - 在数据与埋点部分标注事件是否跨端复用，或需要按端区分。
 
-## 9. HTML 线框（wireframe）生成约定
-
-在满足一定条件时，本 skill 可以在生成 PRD Markdown 之后，基于 PRD 中的 `ai-wireframe` 区块，自动调用本地脚本 `scripts/generate_ai_wireframes.py`，生成对应的 HTML 线框页面，方便快速预览界面草图。
+## 9. 与 sky-demand-evaluator 的串联示例（简要）
 
 ### 9.1 触发方式与调用方式
 
