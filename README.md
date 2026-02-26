@@ -24,7 +24,7 @@ A Codex skill for turning product demands into structured PRD drafts (with data/
 
 ## Layout
 
-- `SKILL.md`  
+- `skill/SKILL.md`  
   核心 skill 定义与使用说明（PRD 结构、数据设计等）。
 
 ## Typical workflow
